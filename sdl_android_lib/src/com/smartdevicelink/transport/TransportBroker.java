@@ -452,14 +452,14 @@ public class TransportBroker {
 				bundle.putInt(TransportConstants.BYTES_TO_SEND_EXTRA_OFFSET, 0);
 				bundle.putInt(TransportConstants.BYTES_TO_SEND_EXTRA_COUNT, bytes.length);
 				bundle.putInt(TransportConstants.BYTES_TO_SEND_FLAGS, TransportConstants.BYTES_TO_SEND_FLAG_NONE);
-				bundle.putInt(TransportConstants.PACKET_PRIORITY_COEFFICIENT, packet.getPrioirtyCoefficient());
+				bundle.putInt(TransportConstants.PACKET_PRIORITY_COEFFICIENT, packet.getPriorityCoefficient());
 				message.setData(bundle);
 				
 				sendMessageToRouterService(message);
 				return true;
 			}else{ //Message is too big for IPC transaction 
 				//Log.w(TAG, "Message too big for single IPC transaction. Breaking apart. Size - " +  bytes.length);
-				ByteArrayMessageSpliter splitter = new ByteArrayMessageSpliter(appId,TransportConstants.ROUTER_SEND_PACKET,bytes,packet.getPrioirtyCoefficient() );				
+				ByteArrayMessageSpliter splitter = new ByteArrayMessageSpliter(appId,TransportConstants.ROUTER_SEND_PACKET,bytes,packet.getPriorityCoefficient() );
 				while(splitter.isActive()){
 					sendMessageToRouterService(splitter.nextMessage());
 				}
