@@ -12,8 +12,8 @@ import com.smartdevicelink.util.HttpUtils;
 public class LockScreenManager {
 	
     public interface OnLockScreenIconDownloadedListener{
-        public void onLockScreenIconDownloaded(Bitmap icon);
-        public void onLockScreenIconDownloadError(Exception e);
+        void onLockScreenIconDownloaded(Bitmap icon);
+        void onLockScreenIconDownloadError(Exception e);
     }
     
     private Bitmap lockScreenIcon;

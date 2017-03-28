@@ -10,12 +10,12 @@ public interface IHeartbeatMonitorListener {
      *
      * @param monitor the caller
      */
-    public void sendHeartbeat(IHeartbeatMonitor monitor);
+    void sendHeartbeat(IHeartbeatMonitor monitor);
 
     /**
      * Notifies the listener that the heartbeat timed out.
      *
      * @param monitor the caller
      */
-    public void heartbeatTimedOut(IHeartbeatMonitor monitor);
+    void heartbeatTimedOut(IHeartbeatMonitor monitor);
 }

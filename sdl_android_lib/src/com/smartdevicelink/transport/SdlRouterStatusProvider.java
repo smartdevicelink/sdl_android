@@ -147,7 +147,7 @@ public class SdlRouterStatusProvider {
 	};
 	
 	public interface ConnectedStatusCallback{
-		public void onConnectionStatusUpdate(boolean connected, ComponentName service, Context context);
+		void onConnectionStatusUpdate(boolean connected, ComponentName service, Context context);
 	}
 	
 }

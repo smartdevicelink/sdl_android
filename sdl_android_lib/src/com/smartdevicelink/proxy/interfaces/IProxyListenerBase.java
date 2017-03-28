@@ -73,7 +73,7 @@ public interface IProxyListenerBase  {
 	 * @param notification - Contains information about the HMI Level,
 	 * system context and audio streaming state.
 	 */
-	public void onOnHMIStatus(OnHMIStatus notification);
+	void onOnHMIStatus(OnHMIStatus notification);
 
 	/**
 	 * onProxyClosed has different functionality for the different models.
@@ -86,15 +86,15 @@ public interface IProxyListenerBase  {
 	 * @param info - Includes information about the reason the proxy has been closed.
 	 * @param e - The exception that occurred. 
 	 */
-	public void onProxyClosed(String info, Exception e, SdlDisconnectedReason reason);
+	void onProxyClosed(String info, Exception e, SdlDisconnectedReason reason);
 
-	public void onServiceEnded(OnServiceEnded serviceEnded);
+	void onServiceEnded(OnServiceEnded serviceEnded);
 
-	public void onServiceNACKed(OnServiceNACKed serviceNACKed);
+	void onServiceNACKed(OnServiceNACKed serviceNACKed);
 
-	public void onOnStreamRPC(OnStreamRPC notification);
+	void onOnStreamRPC(OnStreamRPC notification);
 	
-	public void onStreamRPCResponse(StreamRPCResponse response);
+	void onStreamRPCResponse(StreamRPCResponse response);
 
 	/**
 	 * onProxyError() being called indicates that the SDL Proxy experenced an error.
@@ -102,7 +102,7 @@ public interface IProxyListenerBase  {
 	 * @param info - Includes information about the Exception that occurred.
 	 * @param e - The exception that occurred. 
 	 */
-	public void onError(String info, Exception e);
+	void onError(String info, Exception e);
 		
 	/**
 	 * onGenericResponse() being called indicates that SDL could not determine the
@@ -111,14 +111,14 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Includes detailed information about the response.
 	 */
-	public void onGenericResponse(GenericResponse response);
+	void onGenericResponse(GenericResponse response);
 	
 	/**
 	 * onOnCommand() being called indicates that the user selected a command on SDL.
 	 * 
 	 * @param notification - Contains information about the command chosen.
 	 */
-	public void onOnCommand(OnCommand notification);
+	void onOnCommand(OnCommand notification);
 	
 	/**
 	 * onAddCommandResponse() being called indicates that SDL has responded to
@@ -126,7 +126,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onAddCommandResponse(AddCommandResponse response);
+	void onAddCommandResponse(AddCommandResponse response);
 	
 	/**
 	 * onAddSubMenuResponse() being called indicates that SDL has responded to
@@ -134,7 +134,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onAddSubMenuResponse(AddSubMenuResponse response);
+	void onAddSubMenuResponse(AddSubMenuResponse response);
 	
 	/**
 	 * onCreateInteractionChoiceSetResponse() being called indicates that SDL has
@@ -142,7 +142,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onCreateInteractionChoiceSetResponse(CreateInteractionChoiceSetResponse response);
+	void onCreateInteractionChoiceSetResponse(CreateInteractionChoiceSetResponse response);
 	
 	/**
 	 * onAlertResponse being called indicates that SDL has
@@ -150,7 +150,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onAlertResponse(AlertResponse response);
+	void onAlertResponse(AlertResponse response);
 	
 	/**
 	 * onDeleteCommandResponse being called indicates that SDL has
@@ -158,7 +158,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onDeleteCommandResponse(DeleteCommandResponse response);
+	void onDeleteCommandResponse(DeleteCommandResponse response);
 	
 	/**
 	 * onDeleteCommandResponse being called indicates that SDL has
@@ -166,7 +166,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onDeleteInteractionChoiceSetResponse(DeleteInteractionChoiceSetResponse response);
+	void onDeleteInteractionChoiceSetResponse(DeleteInteractionChoiceSetResponse response);
 	
 	/**
 	 * onDeleteCommandResponse being called indicates that SDL has
@@ -174,7 +174,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onDeleteSubMenuResponse(DeleteSubMenuResponse response);
+	void onDeleteSubMenuResponse(DeleteSubMenuResponse response);
 	
 	/**
 	 * onPerformInteractionResponse being called indicates that SDL has
@@ -182,7 +182,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onPerformInteractionResponse(PerformInteractionResponse response);
+	void onPerformInteractionResponse(PerformInteractionResponse response);
 	
 	/**
 	 * onResetGlobalPropertiesResponse being called indicates that SDL has
@@ -190,7 +190,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onResetGlobalPropertiesResponse(ResetGlobalPropertiesResponse response);
+	void onResetGlobalPropertiesResponse(ResetGlobalPropertiesResponse response);
 	
 	/**
 	 * onSetGlobalPropertiesResponse being called indicates that SDL has
@@ -198,7 +198,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onSetGlobalPropertiesResponse(SetGlobalPropertiesResponse response);
+	void onSetGlobalPropertiesResponse(SetGlobalPropertiesResponse response);
 	
 	/**
 	 * onSetMediaClockTimerResponse being called indicates that SDL has
@@ -206,7 +206,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onSetMediaClockTimerResponse(SetMediaClockTimerResponse response);
+	void onSetMediaClockTimerResponse(SetMediaClockTimerResponse response);
 	
 	/**
 	 * onShowResponse being called indicates that SDL has
@@ -214,7 +214,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onShowResponse(ShowResponse response);
+	void onShowResponse(ShowResponse response);
 	
 	/**
 	 * onSpeakResponse being called indicates that SDL has
@@ -222,14 +222,14 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onSpeakResponse(SpeakResponse response);
+	void onSpeakResponse(SpeakResponse response);
 	
 	/**
 	 * onButtonEvent being called indicates that a button event has occurred. 
 	 * 
 	 * @param notification - Contains information about the notification sent from SDL.
 	 */
-	public void onOnButtonEvent(OnButtonEvent notification);
+	void onOnButtonEvent(OnButtonEvent notification);
 
 	/**
 	 * onButtonPress being called indicates that SDL has a button has 
@@ -237,7 +237,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param notification - Contains information about the notification sent from SDL.
 	 */
-	public void onOnButtonPress(OnButtonPress notification);
+	void onOnButtonPress(OnButtonPress notification);
 	
 	/**
 	 * onSubscribeButtonResponse being called indicates that SDL has
@@ -245,7 +245,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onSubscribeButtonResponse(SubscribeButtonResponse response);
+	void onSubscribeButtonResponse(SubscribeButtonResponse response);
 	
 	/**
 	 * onUnsubscribeButtonResponse being called indicates that SDL has
@@ -253,7 +253,7 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param response - Contains information about the response sent from SDL.
 	 */
-	public void onUnsubscribeButtonResponse(UnsubscribeButtonResponse response);
+	void onUnsubscribeButtonResponse(UnsubscribeButtonResponse response);
 
 	/**
 	 * onOnPermissionsChange being called indicates that your app permissions have 
@@ -262,77 +262,77 @@ public interface IProxyListenerBase  {
 	 * 
 	 * @param notification - Contains information about the changed permissions.
 	 */
-	public void onOnPermissionsChange(OnPermissionsChange notification);
+	void onOnPermissionsChange(OnPermissionsChange notification);
 	
-	public void onSubscribeVehicleDataResponse(SubscribeVehicleDataResponse response);
+	void onSubscribeVehicleDataResponse(SubscribeVehicleDataResponse response);
 	
-	public void onUnsubscribeVehicleDataResponse(UnsubscribeVehicleDataResponse response);
+	void onUnsubscribeVehicleDataResponse(UnsubscribeVehicleDataResponse response);
 	
-	public void onGetVehicleDataResponse(GetVehicleDataResponse response);				
+	void onGetVehicleDataResponse(GetVehicleDataResponse response);
 	
-	public void onOnVehicleData(OnVehicleData notification);
+	void onOnVehicleData(OnVehicleData notification);
 	
-	public void onPerformAudioPassThruResponse(PerformAudioPassThruResponse response);
+	void onPerformAudioPassThruResponse(PerformAudioPassThruResponse response);
 	
-	public void onEndAudioPassThruResponse(EndAudioPassThruResponse response);
+	void onEndAudioPassThruResponse(EndAudioPassThruResponse response);
 	
-	public void onOnAudioPassThru(OnAudioPassThru notification);
+	void onOnAudioPassThru(OnAudioPassThru notification);
 
-	public void onPutFileResponse(PutFileResponse response);
+	void onPutFileResponse(PutFileResponse response);
 	
-	public void onDeleteFileResponse(DeleteFileResponse response);
+	void onDeleteFileResponse(DeleteFileResponse response);
 	
-	public void onListFilesResponse(ListFilesResponse response);
+	void onListFilesResponse(ListFilesResponse response);
 
-	public void onSetAppIconResponse(SetAppIconResponse response);
+	void onSetAppIconResponse(SetAppIconResponse response);
 	
-	public void onScrollableMessageResponse(ScrollableMessageResponse response);
+	void onScrollableMessageResponse(ScrollableMessageResponse response);
 
-	public void onChangeRegistrationResponse(ChangeRegistrationResponse response);
+	void onChangeRegistrationResponse(ChangeRegistrationResponse response);
 
-	public void onSetDisplayLayoutResponse(SetDisplayLayoutResponse response);
+	void onSetDisplayLayoutResponse(SetDisplayLayoutResponse response);
 	
-	public void onOnLanguageChange(OnLanguageChange notification);
+	void onOnLanguageChange(OnLanguageChange notification);
 	
-	public void onOnHashChange(OnHashChange notification);
+	void onOnHashChange(OnHashChange notification);
 	
-	public void onSliderResponse(SliderResponse response);
+	void onSliderResponse(SliderResponse response);
 	
-	public void onOnDriverDistraction(OnDriverDistraction notification);
+	void onOnDriverDistraction(OnDriverDistraction notification);
 		
-	public void onOnTBTClientState(OnTBTClientState notification);
+	void onOnTBTClientState(OnTBTClientState notification);
 	
-	public void onOnSystemRequest(OnSystemRequest notification);
+	void onOnSystemRequest(OnSystemRequest notification);
 	
-	public void onSystemRequestResponse(SystemRequestResponse response);
+	void onSystemRequestResponse(SystemRequestResponse response);
 	
-	public void onOnKeyboardInput(OnKeyboardInput notification);
+	void onOnKeyboardInput(OnKeyboardInput notification);
 	
-	public void onOnTouchEvent(OnTouchEvent notification);
+	void onOnTouchEvent(OnTouchEvent notification);
 	
-	public void onDiagnosticMessageResponse(DiagnosticMessageResponse response);
+	void onDiagnosticMessageResponse(DiagnosticMessageResponse response);
 	
-	public void onReadDIDResponse(ReadDIDResponse response);
+	void onReadDIDResponse(ReadDIDResponse response);
 	
-	public void onGetDTCsResponse(GetDTCsResponse response);
+	void onGetDTCsResponse(GetDTCsResponse response);
 	
-	public void onOnLockScreenNotification(OnLockScreenStatus notification);
+	void onOnLockScreenNotification(OnLockScreenStatus notification);
 	
-	public void onDialNumberResponse(DialNumberResponse response);
+	void onDialNumberResponse(DialNumberResponse response);
 	
-	public void onSendLocationResponse(SendLocationResponse response);
+	void onSendLocationResponse(SendLocationResponse response);
 
-	public void onShowConstantTbtResponse(ShowConstantTbtResponse response);
+	void onShowConstantTbtResponse(ShowConstantTbtResponse response);
 
-	public void onAlertManeuverResponse(AlertManeuverResponse response);
+	void onAlertManeuverResponse(AlertManeuverResponse response);
 
-	public void onUpdateTurnListResponse(UpdateTurnListResponse response);
+	void onUpdateTurnListResponse(UpdateTurnListResponse response);
 
-	public void onServiceDataACK(int dataSize);
-	public void onGetWayPointsResponse(GetWayPointsResponse response);
+	void onServiceDataACK(int dataSize);
+	void onGetWayPointsResponse(GetWayPointsResponse response);
 
-	public void onSubscribeWayPointsResponse(SubscribeWayPointsResponse response);
+	void onSubscribeWayPointsResponse(SubscribeWayPointsResponse response);
 
-	public void onUnsubscribeWayPointsResponse(UnsubscribeWayPointsResponse response);
-	public void onOnWayPointChange(OnWayPointChange notification);
+	void onUnsubscribeWayPointsResponse(UnsubscribeWayPointsResponse response);
+	void onOnWayPointChange(OnWayPointChange notification);
 }

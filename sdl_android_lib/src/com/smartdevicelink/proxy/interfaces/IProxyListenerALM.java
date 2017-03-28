@@ -7,14 +7,14 @@ public interface IProxyListenerALM extends IProxyListenerBase {
 	 * **MOVED TO IProxyListenerBase** - onOnHMIStatus() being called indicates that the proxy has entered a state in which the 
 	 * application may create SDL related resources (addCommands, ChoiceSets). 
 	 */
-	//public void onOnHMIStatus(OnHMIStatus notification);
+	//void onOnHMIStatus(OnHMIStatus notification);
 	
 	/**
 	 * **MOVED TO IProxyListenerBase** - onProxyClosed() being called indicates that the app is no longer registered with SDL
 	 * All resources on SDL (addCommands and ChoiceSets) have been deleted and will have to be
 	 * recreated upon the next onReadyForInitialization() call-back. 
 	 */
-	//public void onProxyClosed(String info, Exception e);
+	//void onProxyClosed(String info, Exception e);
 	
 	/**
 	 * **MOVED TO IProxyListenerBase** - onError() being called indicates that the proxy has experienced an unrecoverable error.
@@ -23,7 +23,7 @@ public interface IProxyListenerALM extends IProxyListenerBase {
 	 * @param info - Any info present about the error that occurred.
 	 * @param e - Any exception thrown by the error.
 	 */
-	//public void onError(String info, Exception e);
+	//void onError(String info, Exception e);
 	
 	/**
 	 * **Deprecated** - onSdlInterfaceAvailable() being called indicates that the proxy now has access to SDL's HMI. 

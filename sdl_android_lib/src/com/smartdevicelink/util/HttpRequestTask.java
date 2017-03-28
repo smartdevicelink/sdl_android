@@ -169,12 +169,12 @@ public class HttpRequestTask extends AsyncTask<String, String, String> {
 		 * Called when HTTP request is successfully completed.
 		 * @param response The response to the HTTP request.
 		 */
-		public abstract void httpCallComplete(String response);
+		void httpCallComplete(String response);
 		/**
 		 * Called when HTTP request failed.
 		 * @param statusCode The HTTP failure code.
 		 */
-		public abstract void httpFailure(int statusCode);
+		void httpFailure(int statusCode);
 	}
 
 }
