@@ -345,22 +345,22 @@ public class RouterServiceValidator {
 	/**
 	 * Using the knowledge that all SDL enabled apps have an SDL Broadcast Receiver that has an intent filter that includes a specific 
 	 * intent. 
-	 * @return 
+	 * @return the list of Sdl enabled apps if any app is found; null or empty list otherwise
 	 */
-	private static List<SdlApp> findAllSdlApps(Context context){
+	protected static List<SdlApp> findAllSdlApps(Context context){
 		List<SdlApp> apps = new ArrayList<SdlApp>();
 		PackageManager packageManager = context.getPackageManager();
 		Intent intent = new Intent();
 		intent.setAction(TransportConstants.START_ROUTER_SERVICE_ACTION);
 		List<ResolveInfo> infoList = packageManager.queryBroadcastReceivers(intent, 0);
-		//We want to sort our list so that we know it's the same everytime
-		Collections.sort(infoList,new Comparator<ResolveInfo>() {
-	        @Override
-	        public int compare(ResolveInfo lhs, ResolveInfo rhs) {
-	            return lhs.activityInfo.packageName.compareTo(rhs.activityInfo.packageName);
-	        }
-	    });
 		if(infoList!=null){
+			//We want to sort our list so that we know it's the same everytime
+			Collections.sort(infoList,new Comparator<ResolveInfo>() {
+				@Override
+				public int compare(ResolveInfo lhs, ResolveInfo rhs) {
+					return lhs.activityInfo.packageName.compareTo(rhs.activityInfo.packageName);
+				}
+			});
 			String packageName;
 			for(ResolveInfo info : infoList){
 				//Log.i(TAG, "SDL apps: " + info.activityInfo.packageName);
@@ -417,17 +417,23 @@ public class RouterServiceValidator {
 		final JSONObject object = new JSONObject();
 		JSONArray array = new JSONArray();
 		JSONObject jsonApp;
-		
-		for(SdlApp app: apps){	//Format all the apps into a JSON object and add it to the JSON array
-			try{
-				jsonApp = new JSONObject();
-				jsonApp.put(JSON_APP_PACKAGE_TAG, app.packageName);
-				jsonApp.put(JSON_APP_VERSION_TAG, app.versionCode);
-				array.put(jsonApp);
-			}catch(JSONException e){
-				e.printStackTrace();
-				continue;
+		if (apps != null && apps.size() > 0) {
+			for (SdlApp app : apps) {    //Format all the apps into a JSON object and add it to the JSON array
+				try {
+					jsonApp = new JSONObject();
+					jsonApp.put(JSON_APP_PACKAGE_TAG, app.packageName);
+					jsonApp.put(JSON_APP_VERSION_TAG, app.versionCode);
+					array.put(jsonApp);
+				} catch (JSONException e) {
+					e.printStackTrace();
+					continue;
+				}
 			}
+		} else {
+			if (listCallback != null) {
+				listCallback.onListObtained(false);
+			}
+			return false;
 		}
 		
 		try {object.put(JSON_PUT_ARRAY_TAG, array);} catch (JSONException e) {e.printStackTrace();}
@@ -469,7 +475,7 @@ public class RouterServiceValidator {
 		}
 
 		new HttpRequestTask(cb).execute(REQUEST_PREFIX,HttpRequestTask.REQUEST_TYPE_POST,object.toString(),"application/json","application/json");
-		
+
 		return true;
 	}
 	
