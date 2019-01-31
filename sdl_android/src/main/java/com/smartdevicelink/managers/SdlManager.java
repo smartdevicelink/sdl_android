@@ -50,10 +50,12 @@ import com.smartdevicelink.transport.MultiplexTransportConfig;
 import com.smartdevicelink.transport.enums.TransportType;
 import com.smartdevicelink.transport.utl.TransportRecord;
 import com.smartdevicelink.util.DebugTool;
+import com.smartdevicelink.util.Localization;
 import com.smartdevicelink.util.Version;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 
 /**
@@ -85,6 +87,7 @@ public class SdlManager{
 	private int state = -1;
 	private List<Class<? extends SdlSecurityBase>> sdlSecList;
 	private LockScreenConfig lockScreenConfig;
+	private Localization localization;
 	private final Object STATE_LOCK = new Object();
 
 
@@ -92,7 +95,7 @@ public class SdlManager{
 	private PermissionManager permissionManager;
 	private FileManager fileManager;
 	private LockScreenManager lockScreenManager;
-    private ScreenManager screenManager;
+	private ScreenManager screenManager;
 	private VideoStreamManager videoStreamManager;
 	private AudioStreamManager audioStreamManager;
 
@@ -321,7 +324,7 @@ public class SdlManager{
      * @return a VideoStreamManager object attached to this SdlManager instance
      */
 	public @Nullable
-    VideoStreamManager getVideoStreamManager() {
+	VideoStreamManager getVideoStreamManager() {
 		checkSdlManagerState();
 		return videoStreamManager;
 	}
@@ -350,6 +353,11 @@ public class SdlManager{
 		}
 		checkSdlManagerState();
 		return screenManager;
+	}
+
+	public @NonNull
+	Localization getLocalization() {
+		return localization;
 	}
 
 	/**
@@ -936,6 +944,15 @@ public class SdlManager{
 				sdlManager.hmiLanguage = Language.EN_US;
 			}
 
+			// Create a locale instance based on desired HMI language
+			Locale locale;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				locale = Locale.forLanguageTag(sdlManager.hmiLanguage.toString());
+			} else {
+				String[] localeString = sdlManager.hmiLanguage.toString().split("-");
+				locale = new Locale(localeString[0], localeString[1]);
+			}
+			sdlManager.localization = new Localization(sdlManager.context, locale);
 			sdlManager.transitionToState(BaseSubManager.SETTING_UP);
 
 			return sdlManager;
