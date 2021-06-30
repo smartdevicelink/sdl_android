@@ -108,7 +108,7 @@ public class SdlManagerTests {
             }
 
             @Override
-            public void onError(String info, Exception e) {
+            public void onError(SdlManager manager, String info, Exception e) {
 
             }
 

@@ -49,6 +49,7 @@ import android.util.AndroidRuntimeException;
 
 import androidx.annotation.CallSuper;
 
+import com.smartdevicelink.proxy.rpc.VehicleType;
 import com.smartdevicelink.transport.RouterServiceValidator.TrustedListCallback;
 import com.smartdevicelink.transport.enums.TransportType;
 import com.smartdevicelink.transport.utl.SdlDeviceListener;
@@ -58,6 +59,8 @@ import com.smartdevicelink.util.IntegrationValidator;
 import com.smartdevicelink.util.SdlAppInfo;
 import com.smartdevicelink.util.ServiceFinder;
 
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
@@ -145,6 +148,15 @@ public abstract class SdlBroadcastReceiver extends BroadcastReceiver {
             DebugTool.logError(TAG, "You cannot use the default SdlRouterService class, it must be extended in your project. THIS WILL THROW AN EXCEPTION IN FUTURE RELEASES!!");
         }
 
+        HashMap<String, Object> vehicleInfoStore = (HashMap<String, Object>) intent.getSerializableExtra(TransportConstants.VEHICLE_INFO);
+
+        VehicleType vehicleType;
+        if (vehicleInfoStore == null || vehicleInfoStore.isEmpty()) {
+            vehicleType = null;
+        } else {
+            vehicleType = new VehicleType(vehicleInfoStore);
+        }
+
         //This will only be true if we are being told to reopen our SDL service because SDL is enabled
         if (action.equalsIgnoreCase(TransportConstants.START_ROUTER_SERVICE_ACTION)) {
             if (intent.hasExtra(TransportConstants.START_ROUTER_SERVICE_SDL_ENABLED_EXTRA)) {
@@ -178,7 +190,7 @@ public abstract class SdlBroadcastReceiver extends BroadcastReceiver {
             } else if (intent.getBooleanExtra(TransportConstants.PING_ROUTER_SERVICE_EXTRA, false)) {
                 //We were told to wake up our router services
                 boolean altServiceWake = intent.getBooleanExtra(TransportConstants.BIND_REQUEST_TYPE_ALT_TRANSPORT, false);
-                didStart = wakeUpRouterService(context, false, altServiceWake, device);
+                didStart = wakeUpRouterService(context, false, altServiceWake, device, vehicleType);
 
             }
         }
@@ -189,7 +201,7 @@ public abstract class SdlBroadcastReceiver extends BroadcastReceiver {
 
             if (!didStart) {
                 DebugTool.logInfo(TAG, "attempting to wake up router service");
-                didStart = wakeUpRouterService(context, true, false, device);
+                didStart = wakeUpRouterService(context, true, false, device, vehicleType);
             }
 
             //So even though we started our own version, on some older phones we find that two services are started up so we want to make sure we send our version that we are working with
@@ -211,8 +223,10 @@ public abstract class SdlBroadcastReceiver extends BroadcastReceiver {
      * @param componentName    the router service that should be started
      * @param altTransportWake if the alt transport flag should be set. Only used in debug
      * @param device           the connected bluetooth device
+     * @param confirmedDevice  if the device is confirmed
+     * @param vehicleType      vehicle params retrieved from connected device
      */
-    private static void startRouterService(Context context, ComponentName componentName, boolean altTransportWake, BluetoothDevice device, boolean confirmedDevice) {
+    private static void startRouterService(Context context, ComponentName componentName, boolean altTransportWake, BluetoothDevice device, boolean confirmedDevice, VehicleType vehicleType) {
         if (componentName == null) {
             return;
         }
@@ -230,6 +244,17 @@ public abstract class SdlBroadcastReceiver extends BroadcastReceiver {
 
         if (confirmedDevice) {
             serviceIntent.putExtra(TransportConstants.CONFIRMED_SDL_DEVICE, confirmedDevice);
+        }
+
+        if (vehicleType == null) {
+            final String address = device != null ? device.getAddress() : null;
+            Hashtable<String, Object> store = AndroidTools.getVehicleTypeFromPrefs(context, address);
+            if (store != null) {
+                vehicleType = new VehicleType(store);
+            }
+        }
+        if (vehicleType != null) {
+            serviceIntent.putExtra(TransportConstants.VEHICLE_INFO, vehicleType.getStore());
         }
 
         try {
@@ -254,7 +279,7 @@ public abstract class SdlBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    private boolean wakeUpRouterService(final Context context, final boolean ping, final boolean altTransportWake, final BluetoothDevice device) {
+    private boolean wakeUpRouterService(final Context context, final boolean ping, final boolean altTransportWake, final BluetoothDevice device, final VehicleType vehicleType) {
         new ServiceFinder(context, context.getPackageName(), new ServiceFinder.ServiceFinderCallback() {
             @Override
             public void onComplete(Vector<ComponentName> routerServices) {
@@ -263,7 +288,7 @@ public abstract class SdlBroadcastReceiver extends BroadcastReceiver {
                 if (runningBluetoothServicePackage.isEmpty()) {
                     //If there isn't a service running we should try to start one
                     //We will try to sort the SDL enabled apps and find the one that's been installed the longest
-                    final List<SdlAppInfo> sdlAppInfoList = AndroidTools.querySdlAppInfo(context, new SdlAppInfo.BestRouterComparator());
+                    final List<SdlAppInfo> sdlAppInfoList = AndroidTools.querySdlAppInfo(context, new SdlAppInfo.BestRouterComparator(), vehicleType);
                     synchronized (DEVICE_LISTENER_LOCK) {
                         final boolean sdlDeviceListenerEnabled = SdlDeviceListener.isFeatureSupported(sdlAppInfoList);
                         if (sdlDeviceListenerEnabled) {
@@ -294,7 +319,7 @@ public abstract class SdlBroadcastReceiver extends BroadcastReceiver {
                     }
 
                     if (sdlAppInfoList != null && !sdlAppInfoList.isEmpty()) {
-                        startRouterService(context, sdlAppInfoList.get(0).getRouterServiceComponentName(), altTransportWake, device, false);
+                        startRouterService(context, sdlAppInfoList.get(0).getRouterServiceComponentName(), altTransportWake, device, false, vehicleType);
                     } else {
                         DebugTool.logInfo(TAG, "No SDL Router Services found");
                         DebugTool.logInfo(TAG, "WARNING: This application has not specified its SdlRouterService correctly in the manifest. THIS WILL THROW AN EXCEPTION IN FUTURE RELEASES!!");
@@ -559,15 +584,15 @@ public abstract class SdlBroadcastReceiver extends BroadcastReceiver {
             if (sdlDeviceListener == null) {
                 sdlDeviceListener = new SdlDeviceListener(context, bluetoothDevice, new SdlDeviceListener.Callback() {
                     @Override
-                    public boolean onTransportConnected(Context context, BluetoothDevice bluetoothDevice) {
+                    public boolean onTransportConnected(Context context, BluetoothDevice bluetoothDevice, VehicleType vehicleType) {
 
                         synchronized (DEVICE_LISTENER_LOCK) {
                             sdlDeviceListener = null;
                             if (context != null) {
-                                final List<SdlAppInfo> sdlAppInfoList = AndroidTools.querySdlAppInfo(context, new SdlAppInfo.BestRouterComparator());
+                                final List<SdlAppInfo> sdlAppInfoList = AndroidTools.querySdlAppInfo(context, new SdlAppInfo.BestRouterComparator(), vehicleType);
                                 if (sdlAppInfoList != null && !sdlAppInfoList.isEmpty()) {
                                     ComponentName routerService = sdlAppInfoList.get(0).getRouterServiceComponentName();
-                                    startRouterService(context, routerService, false, bluetoothDevice, true);
+                                    startRouterService(context, routerService, false, bluetoothDevice, true, vehicleType);
                                 }
                             }
                         }

@@ -2,7 +2,8 @@
 <resources>
     <string name="sdl_router_service_version_name" translatable="false">sdl_router_version</string>
 
-    <integer name="sdl_router_service_version_value">14</integer>
+    <integer name="sdl_router_service_version_value">15</integer>
 
     <string name="sdl_router_service_is_custom_name" translatable="false">sdl_custom_router</string>
+    <string name="sdl_oem_vehicle_type_filter_name" translatable="false">sdl_oem_vehicle_type</string>
 </resources>

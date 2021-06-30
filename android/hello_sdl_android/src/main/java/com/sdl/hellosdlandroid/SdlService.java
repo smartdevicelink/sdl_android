@@ -16,7 +16,9 @@ import com.smartdevicelink.managers.CompletionListener;
 import com.smartdevicelink.managers.SdlManager;
 import com.smartdevicelink.managers.SdlManagerListener;
 import com.smartdevicelink.managers.file.filetypes.SdlArtwork;
+import com.smartdevicelink.managers.lifecycle.ISessionListener;
 import com.smartdevicelink.managers.lifecycle.LifecycleConfigurationUpdate;
+import com.smartdevicelink.managers.lifecycle.LifecycleManager;
 import com.smartdevicelink.managers.screen.AlertView;
 import com.smartdevicelink.managers.screen.OnButtonListener;
 import com.smartdevicelink.managers.screen.choiceset.ChoiceCell;
@@ -33,6 +35,7 @@ import com.smartdevicelink.proxy.rpc.OnButtonPress;
 import com.smartdevicelink.proxy.rpc.OnHMIStatus;
 import com.smartdevicelink.proxy.rpc.Speak;
 import com.smartdevicelink.proxy.rpc.TTSChunk;
+import com.smartdevicelink.proxy.rpc.VehicleType;
 import com.smartdevicelink.proxy.rpc.enums.AppHMIType;
 import com.smartdevicelink.proxy.rpc.enums.ButtonName;
 import com.smartdevicelink.proxy.rpc.enums.FileType;
@@ -47,6 +50,8 @@ import com.smartdevicelink.proxy.rpc.listeners.OnRPCNotificationListener;
 import com.smartdevicelink.transport.BaseTransportConfig;
 import com.smartdevicelink.transport.MultiplexTransportConfig;
 import com.smartdevicelink.transport.TCPTransportConfig;
+import com.smartdevicelink.transport.TransportConstants;
+import com.smartdevicelink.util.AndroidTools;
 import com.smartdevicelink.util.DebugTool;
 import com.smartdevicelink.util.SystemInfo;
 
@@ -99,6 +104,24 @@ public class SdlService extends Service {
             enterForeground();
         }
     }
+
+    final ISessionListener sessionListener = new ISessionListener() {
+        @Override
+        public void onSessionEnd()
+        {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager != null) {
+                try {
+                    notificationManager.cancel(FOREGROUND_SERVICE_ID);
+                    notificationManager.deleteNotificationChannel(APP_ID);
+                } catch (Exception e) {
+                    DebugTool.logError(TAG, "Issue when removing notification and channel", e);
+                }
+            }
+
+            SdlService.this.stopSelf();
+        }
+    };
 
     // Helper method to let the service enter foreground mode
     @SuppressLint("NewApi")
@@ -202,7 +225,11 @@ public class SdlService extends Service {
                 }
 
                 @Override
-                public void onError(String info, Exception e) {
+                public void onError(SdlManager manager, String info, Exception e) {
+                    if (info.equals(TransportConstants.UNSUPPORTED_VEHICLE_INFO_REASON)) {
+                        DebugTool.logError(TAG, "Vehicle is not supported. Stopping OEM app " + APP_ID);
+                        stopProxy();
+                    }
                 }
 
                 @Override
@@ -245,7 +272,14 @@ public class SdlService extends Service {
                 @Override
                 public boolean onSystemInfoReceived(SystemInfo systemInfo) {
                     //Check the SystemInfo object to ensure that the connection to the device should continue
-                    return true;
+                    VehicleType type = systemInfo.getVehicleType();
+                    if (type == null) {
+                        DebugTool.logInfo(TAG, "No vehicle data to check - assume VD is supported");
+                        return true;
+                    }
+
+                    List<VehicleType> vehicleTypes = AndroidTools.getVehicleTypesFromManifest(getBaseContext(), SdlRouterService.class, R.string.sdl_oem_vehicle_type_filter_name);
+                    return AndroidTools.isSupportableVehicleType(vehicleTypes, type);
                 }
             };
 
@@ -257,8 +291,16 @@ public class SdlService extends Service {
             builder.setAppTypes(appType);
             builder.setTransportType(transport);
             builder.setAppIcon(appIcon);
+
             sdlManager = builder.build();
             sdlManager.start();
+            sdlManager.setSessionListener(sessionListener);
+        }
+    }
+
+    private void stopProxy() {
+        if (sdlManager != null) {
+            sdlManager.dispose();
         }
     }
 

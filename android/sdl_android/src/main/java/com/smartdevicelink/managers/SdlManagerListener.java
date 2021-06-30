@@ -54,7 +54,7 @@ public interface SdlManagerListener extends BaseSdlManagerListener {
      * @param info info regarding the error
      * @param e    the exception
      */
-    void onError(String info, Exception e);
+    void onError(SdlManager manager, String info, Exception e);
 
     /**
      * Called when the SDL manager detected a language mismatch. In case of a language mismatch the

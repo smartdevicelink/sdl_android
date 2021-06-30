@@ -143,7 +143,7 @@ public class USBAccessoryAttachmentActivity extends Activity {
                     //If there isn't a service running we should try to start one
                     //We will try to sort the SDL enabled apps and find the one that's been installed the longest
                     Intent serviceIntent;
-                    List<SdlAppInfo> sdlAppInfoList = AndroidTools.querySdlAppInfo(context, new SdlAppInfo.BestRouterComparator());
+                    List<SdlAppInfo> sdlAppInfoList = AndroidTools.querySdlAppInfo(context, new SdlAppInfo.BestRouterComparator(), null);
 
                     if (sdlAppInfoList != null && !sdlAppInfoList.isEmpty()) {
                         SdlAppInfo optimalRouterService = sdlAppInfoList.get(0);

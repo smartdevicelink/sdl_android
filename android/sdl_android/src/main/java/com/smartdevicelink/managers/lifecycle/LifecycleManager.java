@@ -40,6 +40,7 @@ import com.smartdevicelink.exception.SdlException;
 import com.smartdevicelink.exception.SdlExceptionCause;
 import com.smartdevicelink.protocol.ISdlServiceListener;
 import com.smartdevicelink.protocol.enums.SessionType;
+import com.smartdevicelink.proxy.rpc.VehicleType;
 import com.smartdevicelink.proxy.rpc.enums.SdlDisconnectedReason;
 import com.smartdevicelink.proxy.rpc.enums.SystemCapabilityType;
 import com.smartdevicelink.security.SdlSecurityBase;
@@ -49,6 +50,7 @@ import com.smartdevicelink.transport.BaseTransportConfig;
 import com.smartdevicelink.transport.MultiplexTransportConfig;
 import com.smartdevicelink.transport.TCPTransportConfig;
 import com.smartdevicelink.transport.enums.TransportType;
+import com.smartdevicelink.util.AndroidTools;
 import com.smartdevicelink.util.DebugTool;
 
 import java.lang.ref.WeakReference;
@@ -96,6 +98,11 @@ public class LifecycleManager extends BaseLifecycleManager {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    void saveVehicleType(String address, VehicleType type) {
+        AndroidTools.saveVehicleType(contextWeakReference.get(), type, address);
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -225,5 +232,9 @@ public class LifecycleManager extends BaseLifecycleManager {
             return;
         }
         session.startService(SessionType.PCM, isEncrypted);
+    }
+
+    public void setSessionListener(ISessionListener sessionListener) {
+        this.sessionListener = sessionListener;
     }
 }

@@ -149,7 +149,17 @@ abstract class BaseSdlManager {
 
         @Override
         public void onError(LifecycleManager lifeCycleManager, String info, Exception e) {
+            if (info != null) {
+                DebugTool.logError(TAG, "Error raised: " + info);
+            }
 
+            if (e != null) {
+                DebugTool.logError(TAG, "Exception raised: " + e.getMessage());
+            }
+            
+            if (managerListener != null) {
+                managerListener.onError(null, info, e);
+            }
         }
 
         @Override

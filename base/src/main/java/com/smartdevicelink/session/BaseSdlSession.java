@@ -415,4 +415,12 @@ public abstract class BaseSdlSession implements ISdlProtocol, ISecurityInitializ
     public boolean isTransportForServiceAvailable(SessionType sessionType) {
         return sdlProtocol != null && sdlProtocol.isTransportForServiceAvailable(sessionType);
     }
+
+    public String getBluetoothMacAddress() {
+        if (this.sdlProtocol != null) {
+            return this.sdlProtocol.getBluetoothMacAddress();
+        } else {
+            return null;
+        }
+    }
 }

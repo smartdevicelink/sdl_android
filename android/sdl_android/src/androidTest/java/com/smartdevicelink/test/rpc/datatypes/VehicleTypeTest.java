@@ -8,7 +8,10 @@ import junit.framework.TestCase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Assert;
 
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 
 public class VehicleTypeTest extends TestCase {
@@ -71,5 +74,16 @@ public class VehicleTypeTest extends TestCase {
         } catch (JSONException e) {
             fail(TestValues.JSON_FAIL);
         }
+    }
+
+    public void testHashMapConstructor(){
+        Hashtable<String, Object> store = msg.getStore();
+        HashMap<String, Object> hashMap = new HashMap(store);
+        VehicleType type = new VehicleType(hashMap);
+
+        Assert.assertEquals(type.getMake(), msg.getMake());
+        Assert.assertEquals(type.getModel(), msg.getModel());
+        Assert.assertEquals(type.getModelYear(), msg.getModelYear());
+        Assert.assertEquals(type.getTrim(), msg.getTrim());
     }
 }

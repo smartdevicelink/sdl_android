@@ -198,7 +198,7 @@ public class IntegrationValidator {
 
         boolean serviceFilterHasAction = false;
         String className = localRouterClass.getName();
-        List<SdlAppInfo> services = AndroidTools.querySdlAppInfo(context, null);
+        List<SdlAppInfo> services = AndroidTools.querySdlAppInfo(context, null, null);
         for (SdlAppInfo sdlAppInfo : services) {
             if (sdlAppInfo != null && sdlAppInfo.getRouterServiceComponentName() != null
                     && className.equals((sdlAppInfo.getRouterServiceComponentName().getClassName()))) {

@@ -33,6 +33,7 @@ package com.smartdevicelink.proxy.rpc;
 
 import com.smartdevicelink.proxy.RPCStruct;
 
+import java.util.HashMap;
 import java.util.Hashtable;
 
 /**
@@ -108,6 +109,10 @@ public class VehicleType extends RPCStruct {
      */
     public VehicleType(Hashtable<String, Object> hash) {
         super(hash);
+    }
+
+    public VehicleType(HashMap<String, Object> hash) {
+        super(new Hashtable<>(hash));
     }
 
     /**
