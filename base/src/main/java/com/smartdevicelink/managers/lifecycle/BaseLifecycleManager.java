@@ -104,7 +104,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 abstract class BaseLifecycleManager {
 
     static final String TAG = "Lifecycle Manager";
-    public static final Version MAX_SUPPORTED_RPC_VERSION = new Version(7, 1, 0);
+    public static final Version MAX_SUPPORTED_RPC_VERSION = new Version(8, 0, 0);
 
     // Protected Correlation IDs
     private final int REGISTER_APP_INTERFACE_CORRELATION_ID = 65529,
