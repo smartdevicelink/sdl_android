@@ -527,10 +527,9 @@ public abstract class SdlBroadcastReceiver extends BroadcastReceiver {
             DebugTool.logWarning(TAG, "Router service isn't running, returning false.");
             if (isBluetoothConnected()) {
                 DebugTool.logInfo(TAG, "Bluetooth is connected. Attempting to ping Router Service");
-                Intent serviceIntent = new Intent();
-                serviceIntent.setAction(TransportConstants.START_ROUTER_SERVICE_ACTION);
-                serviceIntent.putExtra(TransportConstants.PING_ROUTER_SERVICE_EXTRA, true);
-                AndroidTools.sendExplicitBroadcast(context, serviceIntent, null);
+                BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                //We need to retrieve connected device MAC address
+                bluetoothAdapter.getProfileProxy(context, new BTProfileServiceListener(context), BluetoothProfile.A2DP);
             }
 
             if (callback != null) {
@@ -552,6 +551,39 @@ public abstract class SdlBroadcastReceiver extends BroadcastReceiver {
         return false;
     }
 
+    private static class BTProfileServiceListener implements BluetoothProfile.ServiceListener {
+        private Context m_context = null;
+        BTProfileServiceListener(Context ctxt){
+            m_context = ctxt;
+        }
+
+        @SuppressWarnings({"MissingPermission"})
+        @Override
+        public void onServiceConnected(int profile, BluetoothProfile proxy) {
+             List<BluetoothDevice> devices = proxy.getConnectedDevices();
+            DebugTool.logInfo(TAG, "Bluetooth is connected devices: "+devices.size());
+
+            if(devices.size() > 0) {
+                BluetoothDevice device = proxy.getConnectedDevices().get(0);
+                if (null != m_context) {
+                    DebugTool.logInfo(TAG, "Bluetooth is connected. Attempting to ping Router Service");
+                    Intent serviceIntent = new Intent();
+                    serviceIntent.setAction(TransportConstants.START_ROUTER_SERVICE_ACTION);
+                    serviceIntent.putExtra(TransportConstants.PING_ROUTER_SERVICE_EXTRA, true);
+                    serviceIntent.putExtra(BluetoothDevice.EXTRA_DEVICE, device);
+                    AndroidTools.sendExplicitBroadcast(m_context, serviceIntent, null);
+                    //close bluetooth proxy
+                    BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    bluetoothAdapter.closeProfileProxy(BluetoothProfile.A2DP, proxy);
+                }
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(int profile) {
+
+        }
+    };
 
     private static SdlDeviceListener getSdlDeviceListener(Context context, BluetoothDevice bluetoothDevice) {
 
