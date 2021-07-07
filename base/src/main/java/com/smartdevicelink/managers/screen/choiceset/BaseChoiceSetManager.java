@@ -40,6 +40,7 @@ import androidx.annotation.Nullable;
 import com.livio.taskmaster.Queue;
 import com.livio.taskmaster.Task;
 import com.smartdevicelink.managers.BaseSubManager;
+import com.smartdevicelink.managers.ChoiceSetCompletionListener;
 import com.smartdevicelink.managers.CompletionListener;
 import com.smartdevicelink.managers.ISdl;
 import com.smartdevicelink.managers.ManagerUtility;
@@ -223,9 +224,9 @@ abstract class BaseChoiceSetManager extends BaseSubManager {
         pendingPreloadChoices.addAll(choicesToUpload);
 
         if (fileManager.get() != null) {
-            PreloadChoicesOperation preloadChoicesOperation = new PreloadChoicesOperation(internalInterface, fileManager.get(), displayName, defaultMainWindowCapability, isVROptional, choicesToUpload, new CompletionListener() {
+            PreloadChoicesOperation preloadChoicesOperation = new PreloadChoicesOperation(internalInterface, fileManager.get(), displayName, defaultMainWindowCapability, isVROptional, choicesToUpload, new ChoiceSetCompletionListener() {
                 @Override
-                public void onComplete(boolean success) {
+                public void onComplete(boolean success, HashSet<ChoiceCell> failedChoiceCells) {
                     if (success) {
                         preloadedChoices.addAll(choicesToUpload);
                         pendingPreloadChoices.removeAll(choicesToUpload);
@@ -234,6 +235,9 @@ abstract class BaseChoiceSetManager extends BaseSubManager {
                         }
                     } else {
                         DebugTool.logError(TAG, "There was an error pre loading choice cells");
+                        choicesToUpload.removeAll(failedChoiceCells);
+                        preloadedChoices.addAll(choicesToUpload);
+                        pendingPreloadChoices.removeAll(choicesToUpload);
                         if (listener != null) {
                             listener.onComplete(false);
                         }
