@@ -101,4 +101,36 @@ public class MenuConfiguration {
         return "MenuConfiguration: MenuLayout = " + this.mainMenuLayout + " | SubMenuLayout = " + this.submenuLayout;
     }
 
+    /**
+     * Note: You should compare using the {@link #equals(Object)} method. <br>
+     * Hash the parameters of the object and return the result for comparison
+     * @return the hash code as an int
+     */
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result += ((getMenuLayout() == null) ? 0 : Integer.rotateLeft(getMenuLayout().hashCode(), 1));
+        result += ((getSubMenuLayout() == null) ? 0 : Integer.rotateLeft(getSubMenuLayout().hashCode(), 2));
+        return result;
+    }
+
+    /**
+     * Uses our custom hashCode for MenuConfiguration objects
+     *
+     * @param o - The object to compare
+     * @return boolean of whether the objects are the same or not
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        // if this is the same memory address, its the same
+        if (this == o) return true;
+        // if this is not an instance of this class, not the same
+        if (!(o instanceof MenuConfiguration)) return false;
+        // if we get to this point, create the hashes and compare them
+        return hashCode() == o.hashCode();
+    }
+
 }

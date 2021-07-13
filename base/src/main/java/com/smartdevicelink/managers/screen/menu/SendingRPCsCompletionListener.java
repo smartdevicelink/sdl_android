@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Livio, Inc.
+ * Copyright (c) 2021 Livio, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,32 +32,15 @@
 
 package com.smartdevicelink.managers.screen.menu;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+import com.smartdevicelink.proxy.RPCRequest;
+import com.smartdevicelink.proxy.RPCResponse;
 
-import com.smartdevicelink.test.TestValues;
+import java.util.Map;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static junit.framework.TestCase.assertEquals;
-
-@RunWith(AndroidJUnit4.class)
-public class SubCellCommandListTests {
-
-    @Test
-    public void testSettersAndGetters() {
-
-        RunScore runScore = new RunScore(TestValues.GENERAL_INT, TestValues.GENERAL_INTEGER_LIST, TestValues.GENERAL_INTEGER_LIST);
-
-        // set everything
-        SubCellCommandList subCellCommandList = new SubCellCommandList(TestValues.GENERAL_STRING, TestValues.GENERAL_INTEGER, runScore, TestValues.GENERAL_MENUCELL_LIST, TestValues.GENERAL_MENUCELL_LIST);
-
-        // use getters and assert equality
-        assertEquals(subCellCommandList.getMenuTitle(), TestValues.GENERAL_STRING);
-        assertEquals(subCellCommandList.getParentId(), TestValues.GENERAL_INTEGER);
-        assertEquals(runScore, runScore);
-        assertEquals(subCellCommandList.getNewList(), TestValues.GENERAL_MENUCELL_LIST);
-        assertEquals(subCellCommandList.getOldList(), TestValues.GENERAL_MENUCELL_LIST);
-
-    }
+/**
+ * Created by Bilal Alsharifi on 1/29/21.
+ */
+interface SendingRPCsCompletionListener {
+    void onComplete(boolean success, Map<RPCRequest, String> errors);
+    void onResponse(RPCRequest request, RPCResponse response);
 }

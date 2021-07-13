@@ -68,14 +68,15 @@ public class ScreenManagerTests {
         assertNull(screenManager.getTextField2Type());
         assertNull(screenManager.getTextField3Type());
         assertNull(screenManager.getTextField4Type());
-        assertNull(screenManager.getMenu());
+        assertTrue(screenManager.getMenu().isEmpty());
         assertNull(screenManager.getVoiceCommands());
         assertTrue(screenManager.getSoftButtonObjects().isEmpty());
         assertNull(screenManager.getSoftButtonObjectByName("test"));
         assertNull(screenManager.getSoftButtonObjectById(1));
         assertEquals(screenManager.getDynamicMenuUpdatesMode(), DynamicMenuUpdatesMode.ON_WITH_COMPAT_MODE);
         assertEquals(screenManager.getState(), BaseSubManager.READY);
-        assertNull(screenManager.getMenuConfiguration());
+        assertNull(screenManager.getMenuConfiguration().getMenuLayout());
+        assertNull(screenManager.getMenuConfiguration().getSubMenuLayout());
     }
 
     @Test
@@ -147,10 +148,9 @@ public class ScreenManagerTests {
         screenManager.setMenu(TestValues.GENERAL_MENUCELL_LIST);
         screenManager.setMenuConfiguration(TestValues.GENERAL_MENU_CONFIGURATION);
 
-        assertEquals(screenManager.getMenu(), TestValues.GENERAL_MENUCELL_LIST);
         assertEquals(screenManager.getDynamicMenuUpdatesMode(), DynamicMenuUpdatesMode.FORCE_ON);
-        // Should not set because of improper RAI response and improper HMI states
-        assertNull(screenManager.getMenuConfiguration());
+        assertEquals(screenManager.getMenu(), TestValues.GENERAL_MENUCELL_LIST);
+        assertEquals(screenManager.getMenuConfiguration(), TestValues.GENERAL_MENU_CONFIGURATION);
     }
 
     @Test

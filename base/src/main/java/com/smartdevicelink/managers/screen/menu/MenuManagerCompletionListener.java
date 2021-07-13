@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Livio, Inc.
+ * Copyright (c) 2021 Livio, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,39 +34,9 @@ package com.smartdevicelink.managers.screen.menu;
 
 import java.util.List;
 
-class RunScore {
-
-    private int score;
-    private List<Integer> oldMenu, currentMenu;
-
-    RunScore(int score, List<Integer> oldMenu, List<Integer> currentMenu) {
-        setScore(score);
-        setOldMenu(oldMenu);
-        setCurrentMenu(currentMenu);
-    }
-
-    private void setCurrentMenu(List<Integer> currentMenu) {
-        this.currentMenu = currentMenu;
-    }
-
-    List<Integer> getCurrentMenu() {
-        return currentMenu;
-    }
-
-    private void setOldMenu(List<Integer> oldMenu) {
-        this.oldMenu = oldMenu;
-    }
-
-    List<Integer> getOldMenu() {
-        return oldMenu;
-    }
-
-    private void setScore(int score) {
-        this.score = score;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
+/**
+ * Created by Bilal Alsharifi on 1/21/21.
+ */
+interface MenuManagerCompletionListener {
+    void onComplete(boolean success, List<MenuCell> currentMenuCells);
 }

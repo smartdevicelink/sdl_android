@@ -448,7 +448,7 @@ public class MenuCell implements Cloneable {
         result += ((getTitle() == null) ? 0 : Integer.rotateLeft(getTitle().hashCode(), 1));
         result += ((getIcon() == null) ? 0 : Integer.rotateLeft(getIcon().hashCode(), 2));
         result += ((getVoiceCommands() == null) ? 0 : Integer.rotateLeft(getVoiceCommands().hashCode(), 3));
-        result += ((getSubCells() == null) ? 0 : Integer.rotateLeft(1, 4));
+        result += ((getSubCells() == null) ? 0 : Integer.rotateLeft(getSubCells().hashCode(), 4));
         result += ((getSecondaryText() == null) ? 0 : Integer.rotateLeft(getSecondaryText().hashCode(), 1));
         result += ((getTertiaryText() == null) ? 0 : Integer.rotateLeft(getTertiaryText().hashCode(), 1));
         result += ((getSecondaryArtwork() == null) ? 0 : Integer.rotateLeft(getSecondaryArtwork().hashCode(), 2));

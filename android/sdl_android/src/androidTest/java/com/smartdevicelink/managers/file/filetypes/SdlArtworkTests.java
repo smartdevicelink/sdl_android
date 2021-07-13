@@ -37,6 +37,9 @@ public class SdlArtworkTests {
     }
 
     public static boolean equalTest(SdlArtwork original, SdlArtwork clone) {
+        if (original == null && clone == null) {
+            return true;
+        }
 
         assertNotNull(original);
         assertNotNull(clone);

@@ -32,60 +32,42 @@
 
 package com.smartdevicelink.managers.screen.menu;
 
+import com.smartdevicelink.managers.screen.menu.DynamicMenuUpdateAlgorithm.MenuCellState;
+
 import java.util.List;
 
-class SubCellCommandList {
+class DynamicMenuUpdateRunScore {
+    private List<MenuCellState> oldStatus; // Will contain all the Deletes and Keeps
+    private List<MenuCellState> updatedStatus; // Will contain all the Adds and Keeps
+    private int score; // Will contain the score, number of total Adds that will need to be created
 
-    private RunScore listsScore;
-    private String menuTitle;
-    private Integer parentId;
-    private List<MenuCell> oldList, newList;
-
-    SubCellCommandList(String menuTitle, Integer parentId, RunScore listsScore, List<MenuCell> oldList, List<MenuCell> newList) {
-        setMenuTitle(menuTitle);
-        setParentId(parentId);
-        setListsScore(listsScore);
-        setOldList(oldList);
-        setNewList(newList);
+    DynamicMenuUpdateRunScore(List<MenuCellState> oldStatus, List<MenuCellState> updatedStatus, int score) {
+        setOldStatus(oldStatus);
+        setUpdatedStatus(updatedStatus);
+        setScore(score);
     }
 
-    private void setParentId(Integer parentId) {
-        this.parentId = parentId;
+    private void setUpdatedStatus(List<MenuCellState> updatedStatus) {
+        this.updatedStatus = updatedStatus;
     }
 
-    Integer getParentId() {
-        return parentId;
+    List<MenuCellState> getUpdatedStatus() {
+        return updatedStatus;
     }
 
-    private void setMenuTitle(String menuTitle) {
-        this.menuTitle = menuTitle;
+    private void setOldStatus(List<MenuCellState> oldStatus) {
+        this.oldStatus = oldStatus;
     }
 
-    String getMenuTitle() {
-        return menuTitle;
+    List<MenuCellState> getOldStatus() {
+        return oldStatus;
     }
 
-    private void setListsScore(RunScore listsScore) {
-        this.listsScore = listsScore;
+    private void setScore(int score) {
+        this.score = score;
     }
 
-    RunScore getListsScore() {
-        return listsScore;
-    }
-
-    private void setOldList(List<MenuCell> oldList) {
-        this.oldList = oldList;
-    }
-
-    List<MenuCell> getOldList() {
-        return oldList;
-    }
-
-    private void setNewList(List<MenuCell> newList) {
-        this.newList = newList;
-    }
-
-    List<MenuCell> getNewList() {
-        return newList;
+    public int getScore() {
+        return score;
     }
 }
